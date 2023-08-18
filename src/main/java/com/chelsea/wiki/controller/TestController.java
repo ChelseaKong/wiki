@@ -1,14 +1,22 @@
 package com.chelsea.wiki.controller;
 
+import com.chelsea.wiki.domain.Test;
+import com.chelsea.wiki.service.TestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
+import java.util.List;
+
 @RestController
 public class TestController {
     @Value("${test.hello:TEST}") // prefer application.properties, if not, read TEST
     private String testHello;
+    @Resource
+    private TestService testService;
+
     /**
      * GET, POST, PUT, DELETE
      *
@@ -37,5 +45,10 @@ public class TestController {
     public String helloPost(String name) {
         return "Hello World! POST, " + name;
         //http://127.0.0.1:8880/hello
+    }
+
+    @GetMapping ("/test/list") // Test mybatis
+    public List<Test> list() {
+        return testService.list();
     }
 }
