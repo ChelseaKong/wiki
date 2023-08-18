@@ -1,12 +1,14 @@
 package com.chelsea.wiki.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TestController {
+    @Value("${test.hello:TEST}") // prefer application.properties, if not, read TEST
+    private String testHello;
     /**
      * GET, POST, PUT, DELETE
      *
@@ -24,8 +26,9 @@ public class TestController {
     // @RequestMapping("/hello")
     @GetMapping ("/hello")
     public String hello() {
-        return "Hello World!";
+        return "Hello World!" + testHello;
         //http://127.0.0.1:8880/hello
+        // Hello World!Hello
     }
     // @PostMapping("/hello") status=405, request method not allowed
 
