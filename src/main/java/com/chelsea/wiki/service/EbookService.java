@@ -7,6 +7,7 @@ import com.chelsea.wiki.req.EbookReq;
 import com.chelsea.wiki.resp.EbookResp;
 import com.chelsea.wiki.util.CopyUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -19,8 +20,13 @@ public class EbookService {
 
     public List<EbookResp> list(EbookReq req) {
         EbookExample ebookExample = new EbookExample();
+        // 写死的条件。不管传什么参数，都会根据这个name去模糊查找
         EbookExample.Criteria criteria = ebookExample.createCriteria();
-        criteria.andNameLike("%" + req.getName() + "%");
+        //criteria.andNameLike("%" + req.getName() + "%");
+        // 改成动态的SQL：如果传入name参数，就根据name去查找；如果没有，就不加name这个条件
+        if (!ObjectUtils.isEmpty(req.getName())) { // 不为空
+            criteria.andNameLike("%" + req.getName() + "%");
+        }
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
         // 把 ebookList 变成 ebookResp, 把 ebookResp 返回
