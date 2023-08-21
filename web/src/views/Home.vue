@@ -101,17 +101,17 @@ for (let i = 0; i < 23; i++) {
 export default defineComponent({
   name: 'Home',
   setup() {
-    console.log("setup");
+    //console.log("setup");
     const ebooks = ref(); // ref用来定义响应式数据
     const ebooks1 = reactive({books: []}); // books是自己定义的属性，属性值用来放电子书列表
 
     onMounted( () => { // 初始化的逻辑都写到 onMounted方法里， setup就放一些参数定义、方法定义
-      console.log("onMounted");
+      //console.log("onMounted");
       axios.get("/ebook/list").then((response) => { // == function (response) {}
         const data = response.data;
         ebooks.value = data.content;
         ebooks1.books = data.content;
-        console.log(response);
+        //console.log(response);
       });
     })
 
