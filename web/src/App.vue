@@ -1,16 +1,7 @@
 <template>
-  <!--
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
-  -->
   <a-layout>
     <the-header></the-header>
-
     <router-view/>
-
     <the-footer></the-footer>
   </a-layout>
 </template>
@@ -46,6 +37,3 @@ export default defineComponent({
   background: #fff;
 }
 </style>
-<script setup lang="ts">
-import TheFooter from "@/components/the-footer.vue";
-</script>

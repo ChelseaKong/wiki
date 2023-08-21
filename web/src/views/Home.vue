@@ -13,11 +13,11 @@
     <a-layout style="padding: 24px 0; background: #fff">
       <a-layout-sider width="200" style="background: #fff">
         <a-menu
-            v-model:selectedKeys="selectedKeys2"
-            v-model:openKeys="openKeys"
             mode="inline"
             style="height: 100%"
         >
+          <!-- v-model:selectedKeys="selectedKeys2"
+          v-model:openKeys="openKeys" -->
           <a-sub-menu key="sub1">
             <template #title>
                 <span>
@@ -65,8 +65,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
+import axios from 'axios';
 export default defineComponent({
   name: 'Home',
+  setup() {
+    console.log("setup");
+    axios.get("http://localhost:8880/ebook/list?name=Spring").then((response) => { // == function (response) {}
+      console.log(response);
+    })
+  }
 });
 </script>
