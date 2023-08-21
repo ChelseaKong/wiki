@@ -28,6 +28,6 @@ public class LogFilter implements Filter {
 
         long startTime = System.currentTimeMillis();
         filterChain.doFilter(servletRequest, servletResponse);
-        LOG.info("------------- LogFilter End. Time：{} ms -------------", System.currentTimeMillis() - startTime);
+        LOG.info("------------- LogFilter End. Time: {} ms -------------", System.currentTimeMillis() - startTime);
     }
 }
