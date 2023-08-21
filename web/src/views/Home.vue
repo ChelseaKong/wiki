@@ -57,22 +57,39 @@
         </a-menu>
       </a-layout-sider>
       <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
-        Content
+        <pre>
+          {{ebooks}}
+          {{ebooks1Books}}
+        </pre>
       </a-layout-content>
     </a-layout>
   </a-layout-content>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, ref, reactive, toRef } from 'vue';
 import axios from 'axios';
 export default defineComponent({
   name: 'Home',
   setup() {
     console.log("setup");
-    axios.get("http://localhost:8880/ebook/list?name=Spring").then((response) => { // == function (response) {}
-      console.log(response);
+    const ebooks = ref(); // ref用来定义响应式数据
+    const ebooks1 = reactive({books: []}); // books是自己定义的属性，属性值用来放电子书列表
+
+    onMounted( () => { // 初始化的逻辑都写到 onMounted方法里， setup就放一些参数定义、方法定义
+      console.log("onMounted");
+      axios.get("http://localhost:8880/ebook/list?name=Spring").then((response) => { // == function (response) {}
+        const data = response.data;
+        ebooks.value = data.content;
+        ebooks1.books = data.content;
+        console.log(response);
+      });
     })
+
+    return {
+      ebooks,
+      ebooks1Books: toRef(ebooks1, "books")
+    }
   }
 });
 </script>
