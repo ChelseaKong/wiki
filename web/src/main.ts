@@ -17,3 +17,7 @@ app.use(store).use(router).use(Antd).mount('#app');
 //    app.component(i, icons[i]);
 //}
 
+// 多环境测试
+console.log('ENV: ', process.env.NODE_ENV);
+console.log('SERVER: ', process.env.VUE_APP_SERVER);
+
