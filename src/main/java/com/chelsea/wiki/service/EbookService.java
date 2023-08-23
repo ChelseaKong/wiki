@@ -5,6 +5,7 @@ import com.chelsea.wiki.domain.EbookExample;
 import com.chelsea.wiki.mapper.EbookMapper;
 import com.chelsea.wiki.req.EbookReq;
 import com.chelsea.wiki.resp.EbookResp;
+import com.chelsea.wiki.resp.PageResp;
 import com.chelsea.wiki.util.CopyUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,7 +25,7 @@ public class EbookService {
     //@Autowired spring
     private EbookMapper ebookMapper;
 
-    public List<EbookResp> list(EbookReq req) {
+    public PageResp<EbookResp> list(EbookReq req) {
         EbookExample ebookExample = new EbookExample();
         // 写死的条件。不管传什么参数，都会根据这个name去模糊查找
         EbookExample.Criteria criteria = ebookExample.createCriteria();
@@ -34,11 +35,11 @@ public class EbookService {
             criteria.andNameLike("%" + req.getName() + "%");
         }
         // 支持分页
-        PageHelper.startPage(1, 3);
+        PageHelper.startPage(req.getPage(), req.getSize()); // 请求参数
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
-        PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
-        LOG.info("Total Line Number: {}", pageInfo.getTotal());
+        PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList); // 返回参数：当前页的列表内容
+        LOG.info("Total Line Number: {}", pageInfo.getTotal()); // 返回参数：总行数
         LOG.info("Total Page Number: {}", pageInfo.getPages());
 
         // 把 ebookList 变成 ebookResp, 把 ebookResp 返回
@@ -59,7 +60,11 @@ public class EbookService {
         // list 复制
         List<EbookResp> respList = CopyUtil.copyList(ebookList, EbookResp.class);
 
-        return respList;
+        PageResp<EbookResp> pageResp = new PageResp<>();
+        pageResp.setTotal(pageInfo.getTotal());
+        pageResp.setList(respList);
+
+        return pageResp;
     }
 
 }
