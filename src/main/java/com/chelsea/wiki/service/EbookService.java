@@ -6,6 +6,10 @@ import com.chelsea.wiki.mapper.EbookMapper;
 import com.chelsea.wiki.req.EbookReq;
 import com.chelsea.wiki.resp.EbookResp;
 import com.chelsea.wiki.util.CopyUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -14,6 +18,8 @@ import java.util.List;
 
 @Service
 public class EbookService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);
     @Resource // jdk
     //@Autowired spring
     private EbookMapper ebookMapper;
@@ -27,7 +33,13 @@ public class EbookService {
         if (!ObjectUtils.isEmpty(req.getName())) { // 不为空
             criteria.andNameLike("%" + req.getName() + "%");
         }
+        // 支持分页
+        PageHelper.startPage(1, 3);
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
+
+        PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
+        LOG.info("Total Line Number: {}", pageInfo.getTotal());
+        LOG.info("Total Page Number: {}", pageInfo.getPages());
 
         // 把 ebookList 变成 ebookResp, 把 ebookResp 返回
 
