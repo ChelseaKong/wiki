@@ -2,14 +2,13 @@ package com.chelsea.wiki.controller;
 
 // controller层不要出现 domain的实体类ebook
 
-import com.chelsea.wiki.req.EbookReq;
+import com.chelsea.wiki.req.EbookQueryReq;
+import com.chelsea.wiki.req.EbookSaveReq;
 import com.chelsea.wiki.resp.CommonResp;
-import com.chelsea.wiki.resp.EbookResp;
+import com.chelsea.wiki.resp.EbookQueryResp;
 import com.chelsea.wiki.resp.PageResp;
 import com.chelsea.wiki.service.EbookService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -20,10 +19,17 @@ public class EbookController {
     private EbookService ebookService;
 
     @GetMapping ("/list") // Ebook mybatis
-    public CommonResp list(EbookReq req) {
-        CommonResp<PageResp<EbookResp>> resp = new CommonResp<>();
-        PageResp<EbookResp> list = ebookService.list(req);
+    public CommonResp list(EbookQueryReq req) {
+        CommonResp<PageResp<EbookQueryResp>> resp = new CommonResp<>();
+        PageResp<EbookQueryResp> list = ebookService.list(req);
         resp.setContent(list);
+        return resp;
+    }
+
+    @PostMapping ("/save") // 保存、更新 类的(接口)，都用PostMapper
+    public CommonResp save(@RequestBody EbookSaveReq req) {
+        CommonResp resp = new CommonResp<>();
+        ebookService.save(req);
         return resp;
     }
 }

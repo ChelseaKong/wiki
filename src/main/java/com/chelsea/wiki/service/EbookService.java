@@ -3,8 +3,9 @@ package com.chelsea.wiki.service;
 import com.chelsea.wiki.domain.Ebook;
 import com.chelsea.wiki.domain.EbookExample;
 import com.chelsea.wiki.mapper.EbookMapper;
-import com.chelsea.wiki.req.EbookReq;
-import com.chelsea.wiki.resp.EbookResp;
+import com.chelsea.wiki.req.EbookQueryReq;
+import com.chelsea.wiki.req.EbookSaveReq;
+import com.chelsea.wiki.resp.EbookQueryResp;
 import com.chelsea.wiki.resp.PageResp;
 import com.chelsea.wiki.util.CopyUtil;
 import com.github.pagehelper.PageHelper;
@@ -25,7 +26,7 @@ public class EbookService {
     //@Autowired spring
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq req) {
+    public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         EbookExample ebookExample = new EbookExample();
         // 写死的条件。不管传什么参数，都会根据这个name去模糊查找
         EbookExample.Criteria criteria = ebookExample.createCriteria();
@@ -58,13 +59,24 @@ public class EbookService {
         */
 
         // list 复制
-        List<EbookResp> respList = CopyUtil.copyList(ebookList, EbookResp.class);
+        List<EbookQueryResp> respList = CopyUtil.copyList(ebookList, EbookQueryResp.class);
 
-        PageResp<EbookResp> pageResp = new PageResp<>();
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(respList);
 
         return pageResp;
     }
 
+    // 保存
+    public void save(EbookSaveReq req) {
+        Ebook ebook = CopyUtil.copy(req, Ebook.class);
+        if ( ObjectUtils.isEmpty(req.getId()) ) {
+            // 保存 新增的结果
+            ebookMapper.insert(ebook);
+        } else {
+            // 保存 Edit的结果
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
+    }
 }
