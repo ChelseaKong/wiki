@@ -1,6 +1,7 @@
 package com.chelsea.wiki.resp;
 
 public class EbookQueryResp {
+    // @JsonSerialize(using= ToStringSerializer.class) Long to String
     private Long id;
 
     private String name;

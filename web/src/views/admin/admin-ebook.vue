@@ -5,6 +5,11 @@
     </a-breadcrumb>
     <a-layout style="padding: 24px 0; background: #fff">
       <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
+        <p>
+          <a-button type="primary" @click="add()" size="large">
+            Add
+          </a-button>
+        </p>
         <a-table
             :columns="columns"
             :row-key="record => record.id"
@@ -21,7 +26,7 @@
                 Edit
               </a-button>
               <a-button danger>
-                Deleterecord
+                Delete
               </a-button>
             </a-space>
           </template>
@@ -162,6 +167,12 @@ export default defineComponent({
           ebook.value = record;
         };
 
+        // Add
+        const add = () => {
+          modalVisible.value = true;
+          ebook.value = {};
+        };
+
         onMounted(() => {
           handleQuery({
             page: 1,
@@ -170,6 +181,7 @@ export default defineComponent({
         });
 
         return {
+          // 表格的
           ebooks,
           pagination,
           columns,
@@ -177,10 +189,13 @@ export default defineComponent({
           handleTableChange,
 
           edit,
+          add,
+
+          // 表单类的
           modalVisible,
           modalLoading,
           handleModalOk,
-          ebook,
+          ebook
         }
       }
 });

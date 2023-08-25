@@ -8,6 +8,7 @@ import com.chelsea.wiki.req.EbookSaveReq;
 import com.chelsea.wiki.resp.EbookQueryResp;
 import com.chelsea.wiki.resp.PageResp;
 import com.chelsea.wiki.util.CopyUtil;
+import com.chelsea.wiki.util.SnowFlake;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -25,6 +26,9 @@ public class EbookService {
     @Resource // jdk
     //@Autowired spring
     private EbookMapper ebookMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         EbookExample ebookExample = new EbookExample();
@@ -73,6 +77,11 @@ public class EbookService {
         Ebook ebook = CopyUtil.copy(req, Ebook.class);
         if ( ObjectUtils.isEmpty(req.getId()) ) {
             // 保存 新增的结果
+            // 新增ID的算法：①自增 ②uuid ③雪花算法
+            ebook.setId(snowFlake.nextId());
+            ebook.setDocCount(0);
+            ebook.setViewCount(0);
+            ebook.setVoteCount(0);
             ebookMapper.insert(ebook);
         } else {
             // 保存 Edit的结果
