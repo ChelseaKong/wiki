@@ -70,13 +70,15 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import axios from 'axios';
+import { message } from "ant-design-vue"; // .success .error
+
 export default defineComponent({
       name: 'AdminEbook',
       setup() {
         const ebooks = ref();
         const pagination = ref({
           current: 1,
-          pageSize: 4,
+          pageSize: 1001,
           total: 0
         });
         const loading = ref(false);
@@ -132,14 +134,18 @@ export default defineComponent({
           }).then((response) => {
             loading.value = false;
             const data = response.data;
-            ebooks.value = data.content.list; // list = pageResp.list
-            // 重置分页按钮
-            pagination.value.current = params.page;
-            pagination.value.total = data.content.total; // total = pageResp.total
+            // 拿到后端的数据后，做一个判断
+            if (data.success) {
+              ebooks.value = data.content.list; // list = pageResp.list
+              // 重置分页按钮
+              pagination.value.current = params.page;
+              pagination.value.total = data.content.total; // total = pageResp.total
+            } else {
+              message.error(data.message);
+            }
           });
         };
-        // 表格点击页码时触发
-        const handleTableChange = (pagination: any) => {
+        const handleTableChange = (pagination: any) => { // 表格点击页码时触发
           console.log("看看自带的分页参数都有啥：" + pagination);
           handleQuery({
             page: pagination.current,

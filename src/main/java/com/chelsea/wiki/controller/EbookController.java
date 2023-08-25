@@ -11,6 +11,7 @@ import com.chelsea.wiki.service.EbookService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/ebook") // this class is for ebook
@@ -18,14 +19,16 @@ public class EbookController {
     @Resource
     private EbookService ebookService;
 
+    // Query
     @GetMapping ("/list") // Ebook mybatis
-    public CommonResp list(EbookQueryReq req) {
+    public CommonResp list(@Valid EbookQueryReq req) {
         CommonResp<PageResp<EbookQueryResp>> resp = new CommonResp<>();
         PageResp<EbookQueryResp> list = ebookService.list(req);
         resp.setContent(list);
         return resp;
     }
 
+    // add
     @PostMapping ("/save") // 保存、更新 类的(接口)，都用PostMapper
     public CommonResp save(@RequestBody EbookSaveReq req) {
         CommonResp resp = new CommonResp<>();
@@ -33,6 +36,7 @@ public class EbookController {
         return resp;
     }
 
+    // delete
     @DeleteMapping ("/delete/{id}")
     public CommonResp delete(@PathVariable Long id) {
         CommonResp resp = new CommonResp<>();
