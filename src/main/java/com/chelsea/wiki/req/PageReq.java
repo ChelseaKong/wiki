@@ -4,10 +4,10 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 public class PageReq { // 做分页的
-    @NotNull(message = "The page number cannot be null.")
+    @NotNull(message = "The page number cannot be empty.")
     private int page; // PageNum
 
-    @NotNull(message = "The number of items per page cannot be null.")
+    @NotNull(message = "The number of items per page cannot be empty.")
     @Max(value = 1000, message = "The number of items per page cannot exceed 1000.")
     private int size; // PageSize
 

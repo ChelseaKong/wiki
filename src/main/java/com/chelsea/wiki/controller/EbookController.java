@@ -30,7 +30,7 @@ public class EbookController {
 
     // add
     @PostMapping ("/save") // 保存、更新 类的(接口)，都用PostMapper
-    public CommonResp save(@RequestBody EbookSaveReq req) {
+    public CommonResp save(@Valid@RequestBody EbookSaveReq req) {
         CommonResp resp = new CommonResp<>();
         ebookService.save(req);
         return resp;
