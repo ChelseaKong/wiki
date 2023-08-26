@@ -25,6 +25,7 @@
                         connectionURL="jdbc:mysql://localhost:3306/wikidev?serverTimezone=UTC"
                         userId="wikidev"
                         password="wikidev">
+            <property name="nullCatalogMeansCurrent" value="true" />
         </jdbcConnection>
 
         <!-- domain类的位置 -->
@@ -42,7 +43,7 @@
 
         <!-- <table tableName="demo" domainObjectName="Demo"/> -->
         <table tableName="ebook"/>
-        <!--<table tableName="category"/>-->
+        <table tableName="category"/>
         <!--<table tableName="doc"/>-->
         <!--<table tableName="content"/>-->
         <!--<table tableName="user"/>-->
