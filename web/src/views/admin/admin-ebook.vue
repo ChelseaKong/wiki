@@ -5,10 +5,28 @@
     </a-breadcrumb>
     <a-layout style="padding: 24px 0; background: #fff">
       <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
+        <a-form
+            layout="inline"
+            :model="param"
+        >
+          <a-form-item>
+            <a-input v-model:value="param.name" placeholder="Name">
+              <template #prefix><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
+              Search
+            </a-button>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="add()">
+              Add
+            </a-button>
+          </a-form-item>
+        </a-form>
         <p>
-          <a-button type="primary" @click="add()" size="large">
-            Add
-          </a-button>
+
         </p>
         <a-table
             :columns="columns"
@@ -75,6 +93,9 @@ import { message } from "ant-design-vue"; // .success .error
 export default defineComponent({
       name: 'AdminEbook',
       setup() {
+        const param = ref();
+        param.value = {};
+
         const ebooks = ref();
         const pagination = ref({
           current: 1,
@@ -129,7 +150,8 @@ export default defineComponent({
           axios.get("/ebook/list", {
             params: {
               page: params.page,
-              size: params.size
+              size: params.size,
+              name: param.value.name
             }
           }).then((response) => {
             loading.value = false;
@@ -211,11 +233,13 @@ export default defineComponent({
 
         return {
           // 表格的
+          param,
           ebooks,
           pagination,
           columns,
           loading,
           handleTableChange,
+          handleQuery,
 
           edit,
           add,
