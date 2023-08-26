@@ -13,6 +13,8 @@ public class ControllerExceptionHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     // 校验异常统一处理
+    // @param e
+    // @return
     @ExceptionHandler(value = BindException.class) // 对BindException做一个统一的异常处理，这是有针对性的
     // @ExceptionHandler(value = Exception.class) 所有的异常
     @ResponseBody

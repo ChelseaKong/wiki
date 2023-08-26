@@ -5,28 +5,27 @@
     </a-breadcrumb>
     <a-layout style="padding: 24px 0; background: #fff">
       <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
-        <a-form
-            layout="inline"
-            :model="param"
-        >
-          <a-form-item>
-            <a-input v-model:value="param.name" placeholder="Name">
-              <template #prefix><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
-            </a-input>
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
-              Search
-            </a-button>
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" @click="add()">
-              Add
-            </a-button>
-          </a-form-item>
-        </a-form>
         <p>
-
+          <a-form
+              layout="inline"
+              :model="param"
+          >
+            <a-form-item>
+              <a-input v-model:value="param.name" placeholder="Name">
+                <template #prefix><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
+              </a-input>
+            </a-form-item>
+            <a-form-item>
+              <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
+                Search
+              </a-button>
+            </a-form-item>
+            <a-form-item>
+              <a-button type="primary" @click="add()">
+                Add
+              </a-button>
+            </a-form-item>
+          </a-form>
         </p>
         <a-table
             :columns="columns"
@@ -89,6 +88,7 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import axios from 'axios';
 import { message } from "ant-design-vue"; // .success .error
+import { Tool } from "@/util/tool"
 
 export default defineComponent({
       name: 'AdminEbook',
@@ -201,7 +201,8 @@ export default defineComponent({
         // Edit
         const edit = (record: any) => {
           modalVisible.value = true;
-          ebook.value = record;
+          //ebook.value = record;
+          ebook.value = Tool.copy(record);
         };
 
         // Add
