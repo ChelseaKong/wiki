@@ -30,12 +30,24 @@ public class CategoryService {
     @Resource
     private SnowFlake snowFlake;
 
+    // 全部列出
+    public List<CategoryQueryResp> all() {
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
+        List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
+
+        // list 复制
+        List<CategoryQueryResp> respList = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
+
+
+        return respList;
+    }
+
+    // 分页
     public PageResp<CategoryQueryResp> list(CategoryQueryReq req) {
         CategoryExample categoryExample = new CategoryExample();
-        // 写死的条件。不管传什么参数，都会根据这个name去模糊查找
+        categoryExample.setOrderByClause("sort asc");
         CategoryExample.Criteria criteria = categoryExample.createCriteria();
-        //criteria.andNameLike("%" + req.getName() + "%");
-        // 改成动态的SQL：如果传入name参数，就根据name去查找；如果没有，就不加name这个条件
 
         if (!ObjectUtils.isEmpty(req.getName())) { // 不为空
             criteria.andNameLike("%" + req.getName() + "%");
@@ -48,21 +60,6 @@ public class CategoryService {
         PageInfo<Category> pageInfo = new PageInfo<>(categoryList); // 返回参数：当前页的列表内容
         LOG.info("Total Line Number: {}", pageInfo.getTotal()); // 返回参数：总行数
         LOG.info("Total Page Number: {}", pageInfo.getPages());
-
-        // 把 categoryList 变成 categoryResp, 把 categoryResp 返回
-
-        /*
-        List<CategoryResp> respList = new ArrayList<>();
-        for (Category category : categoryList) { // fori, iter
-
-            // 单体对象复制
-            // CategoryResp categoryResp = new CategoryResp();
-            // BeanUtils.copyProperties(category, categoryResp); // from category source copy to categoryResp target
-            CategoryResp categoryResp = CopyUtil.copy(category, CategoryResp.class);
-
-            respList.add(categoryResp);
-        }
-        */
 
         // list 复制
         List<CategoryQueryResp> respList = CopyUtil.copyList(categoryList, CategoryQueryResp.class);

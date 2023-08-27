@@ -11,12 +11,7 @@
               :model="param"
           >
             <a-form-item>
-              <a-input v-model:value="param.name" placeholder="Name">
-                <template #prefix><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
-              </a-input>
-            </a-form-item>
-            <a-form-item>
-              <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
+              <a-button type="primary" @click="handleQuery()">
                 Search
               </a-button>
             </a-form-item>
@@ -31,9 +26,8 @@
             :columns="columns"
             :row-key="record => record.id"
             :data-source="categorys"
-            :pagination="pagination"
             :loading="loading"
-            @change="handleTableChange">
+            :pagination="false">
           <template #cover="{ text: cover }">
             <img v-if="cover" :src="cover" alt="avatar" />
           </template>
@@ -91,11 +85,6 @@ export default defineComponent({
         param.value = {};
 
         const categorys = ref();
-        const pagination = ref({
-          current: 1,
-          pageSize: 5,
-          total: 0
-        });
         const loading = ref(false);
 
         const columns = [
@@ -120,35 +109,17 @@ export default defineComponent({
         ];
 
         // 数据查询
-        const handleQuery = (params: any) => {
+        const handleQuery = () => {
           loading.value = true;
-          // http://localhost:8880/category/list?page=1&size=4
-          // axios.get("/category/list?page=" + params.page + "&").then((response) =>
-          axios.get("/category/list", {
-            params: {
-              page: params.page,
-              size: params.size,
-              name: param.value.name
-            }
-          }).then((response) => {
+          axios.get("/category/all").then((response) => {
             loading.value = false;
             const data = response.data;
             // 拿到后端的数据后，做一个判断
             if (data.success) {
-              categorys.value = data.content.list; // list = pageResp.list
-              // 重置分页按钮
-              pagination.value.current = params.page;
-              pagination.value.total = data.content.total; // total = pageResp.total
+              categorys.value = data.content; // data.content = list
             } else {
               message.error(data.message);
             }
-          });
-        };
-        const handleTableChange = (pagination: any) => { // 表格点击页码时触发
-          console.log("看看自带的分页参数都有啥：" + pagination);
-          handleQuery({
-            page: pagination.current,
-            size: pagination.pageSize
           });
         };
 
@@ -165,10 +136,7 @@ export default defineComponent({
               modalVisible.value = false;
 
               // 重新加载列表
-              handleQuery({
-                page: pagination.value.current,
-                size: pagination.value.pageSize,
-              });
+              handleQuery();
             } else {
               message.error(data.message);
             }
@@ -194,29 +162,21 @@ export default defineComponent({
             const data = response.data; // data = commonResp
             if (data.success) {
               // 重新加载列表
-              handleQuery({
-                page: pagination.value.current,
-                size: pagination.value.pageSize,
-              });
+              handleQuery();
             }
           });
         };
 
         onMounted(() => {
-          handleQuery({
-            page: 1,
-            size: pagination.value.pageSize,
-          });
+          handleQuery();
         });
 
         return {
           // 表格的
           param,
           categorys,
-          pagination,
           columns,
           loading,
-          handleTableChange,
           handleQuery,
 
           edit,
