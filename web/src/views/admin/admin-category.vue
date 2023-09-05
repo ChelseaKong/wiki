@@ -25,7 +25,7 @@
         <a-table
             :columns="columns"
             :row-key="record => record.id"
-            :data-source="categorys"
+            :data-source="level1"
             :loading="loading"
             :pagination="false">
           <template #cover="{ text: cover }">
@@ -108,6 +108,20 @@ export default defineComponent({
             }
         ];
 
+        /*
+        一级分类树，children属性就是二级分类，还可以往下加，支持无限级
+        [{
+          id: "",
+          name: "",
+          children: [{
+            id: "",
+            name: "",
+          }]
+        }]
+         */
+        const level1 = ref();
+        level1.value = [];
+
         // 数据查询
         const handleQuery = () => {
           loading.value = true;
@@ -117,6 +131,11 @@ export default defineComponent({
             // 拿到后端的数据后，做一个判断
             if (data.success) {
               categorys.value = data.content; // data.content = list
+              console.log("Original Array: ", categorys.value);
+
+              level1.value = [];
+              level1.value = Tool.arrayToTree(categorys.value, 0);
+              console.log("Tree Structure: ", level1);
             } else {
               message.error(data.message);
             }
@@ -174,7 +193,8 @@ export default defineComponent({
         return {
           // 表格的
           param,
-          categorys,
+          //categorys,
+          level1,
           columns,
           loading,
           handleQuery,

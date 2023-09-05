@@ -39,7 +39,6 @@ public class CategoryService {
         // list 复制
         List<CategoryQueryResp> respList = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
 
-
         return respList;
     }
 
