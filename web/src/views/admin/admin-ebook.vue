@@ -147,6 +147,10 @@ export default defineComponent({
         // 数据查询
         const handleQuery = (params: any) => {
           loading.value = true;
+
+          // empty existed data. 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑还是显示编辑前的数据
+          ebooks.value = [];
+
           // http://localhost:8880/ebook/list?page=1&size=4
           // axios.get("/ebook/list?page=" + params.page + "&").then((response) =>
           axios.get("/ebook/list", {
