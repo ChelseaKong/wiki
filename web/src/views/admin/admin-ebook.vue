@@ -37,6 +37,12 @@
           <template #cover="{ text: cover }">
             <img v-if="cover" :src="cover" alt="avatar" />
           </template>
+          <template v-slot:category="{ text, record }">
+            <!-- {{text}}***{{record}} 不渲染的话，text=record，渲染的话，text就是具体的值-->
+            <span>
+              {{ getCategoryName(record.category1Id) }} / {{ getCategoryName(record.category2Id) }}
+            </span>
+          </template>
           <template v-slot:action="{ text, record }">
             <a-space size="small">
               <a-button type="primary" @click="edit(record)">
@@ -116,13 +122,8 @@ export default defineComponent({
               dataIndex: 'name'
             },
             {
-              title: 'Category I',
-              key: 'category1Id',
-              dataIndex: 'category1Id'
-            },
-            {
-              title: 'Category II',
-              dataIndex: 'category2Id'
+              title: 'category',
+              slots: { customRender: 'category' }
             },
             {
               title: 'Documents Count',
@@ -181,6 +182,7 @@ export default defineComponent({
         const modalVisible = ref(false);
         const modalLoading = ref(false);
 
+        // array [100, 101] == 前端开发/Vue
         const categoryIds = ref();
 
         const handleModalOk = () => {
@@ -234,8 +236,9 @@ export default defineComponent({
           });
         };
 
-        // query all category
+        // Query all category
         const level1 = ref();
+        let categorys: any;
         const handleQueryCategory = () => {
           loading.value = true;
           axios.get("/category/all").then((response) => {
@@ -243,7 +246,7 @@ export default defineComponent({
             const data = response.data;
             // 拿到后端的数据后，做一个判断
             if (data.success) {
-              const categorys = data.content; // data.content = list
+              categorys = data.content; // data.content = list
               console.log("Original Array: ", categorys);
 
               level1.value = [];
@@ -254,6 +257,18 @@ export default defineComponent({
             }
           });
         }
+
+        const getCategoryName = (cid: number) => {
+          // console.log(cid)
+          let result = "";
+          categorys.forEach( (item: any) => {
+            if (item.id === cid) {
+              // return item.name; 这样不起作用
+              result = item.name;
+            }
+          });
+          return result;
+        };
 
         onMounted(() => {
           handleQueryCategory();
@@ -272,6 +287,7 @@ export default defineComponent({
           loading,
           handleTableChange,
           handleQuery,
+          getCategoryName,
 
           edit,
           add,
