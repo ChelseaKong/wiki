@@ -11,28 +11,28 @@
       <a-layout-sider width="200" style="background: #fff">
         <a-menu
             mode="inline"
-            style="height: 100%"
+            :style="{ height: '100%', borderRight: 0 }"
             @click="handleClick"
         >
           <a-menu-item key="welcome">
             <router-link to="'/'">
-              <MailOutLined />
-              <span> Welcome </span>
+              <MailOutlined />
+              <span> Welcome! </span>
             </router-link>
           </a-menu-item>
           <a-sub-menu v-for="item in level1" :key="item.id">
             <template v-slot:title>
               <span>
-                <user-outlined />
+                <UserOutlined />
                 {{item.name}}
               </span>
             </template>
-            <template v-for="child in item.children" :key="child.id">
+            <a-menu-item v-for="child in item.children" :key="child.id">
               <MailOutlined />
               <span>
                 {{child.name}}
               </span>
-            </template>
+            </a-menu-item>
           </a-sub-menu>
         </a-menu>
       </a-layout-sider>
@@ -63,7 +63,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, reactive, toRef } from 'vue';
 import axios from 'axios';
-import {LikeOutlined, MessageOutlined, StarOutlined} from "@ant-design/icons-vue";
+import { LikeOutlined, MessageOutlined, StarOutlined, MailOutlined, UserOutlined } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import { Tool } from "@/util/tool";
 
@@ -138,14 +138,18 @@ export default defineComponent({
         pageSize: 3,
       },
       actions: [
-      { icon: StarOutlined, text: '156' },
-      { icon: LikeOutlined, text: '156' },
-      { icon: MessageOutlined, text: '2' },
-    ],
+        { icon: StarOutlined, text: '156' },
+        { icon: LikeOutlined, text: '156' },
+        { icon: MessageOutlined, text: '2' }
+      ],
 
       handleClick,
       level1,
     }
+  },
+  components: {
+    MailOutlined,
+    UserOutlined
   }
 });
 </script>

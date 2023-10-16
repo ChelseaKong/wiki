@@ -250,12 +250,27 @@ export default defineComponent({
             const data = response.data;
             // 拿到后端的数据后，做一个判断
             if (data.success) {
+              // setTimeout(function () { // 只执行一次
+              //   categorys = data.content;
+              //   console.log("Original Array: ", categorys);
+              //
+              //   level1.value = [];
+              //   level1.value = Tool.arrayToTree(categorys, 0);
+              //   console.log("Tree Structure: ", level1);
+              // }, 1000); // 延时一千秒再赋值
+              // setInterval() 循环的，每隔一秒执行一次
               categorys = data.content; // data.content = list
               console.log("Original Array: ", categorys);
 
               level1.value = [];
               level1.value = Tool.arrayToTree(categorys, 0);
               console.log("Tree Structure: ", level1);
+
+              // 加载完分类后，再加载电子书。否则如果分类树加载很慢，则电子书渲染会报错
+              handleQuery({
+                page: 1,
+                size: pagination.value.pageSize,
+              });
             } else {
               message.error(data.message);
             }
@@ -276,10 +291,6 @@ export default defineComponent({
 
         onMounted(() => {
           handleQueryCategory();
-          handleQuery({
-            page: 1,
-            size: pagination.value.pageSize,
-          });
         });
 
         return {
